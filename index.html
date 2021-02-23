@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <head>
+    <meta charset="UTF-8">
     <title>ChatJS - FrontEnd Magazine - Vitor Capelos</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
 </head>
@@ -14,6 +15,7 @@
 
     <div id="sala_chat">
         <div id="historico_mensagens"></div>
+        <select multiple= "multiple" id="lista_usuarios"><option value=''>Todos</option></select>
         <form id='chat'>
             <input type='text' id='texto_mensagem' name='texto_mensagem' />
             <input type='submit' value='Enviar mensagem!' />
@@ -27,13 +29,17 @@
 
         $("form#chat").submit(function(e){
             e.preventDefault();
-            socket.emit("enviar mensagem", $(this).find("#texto_mensagem").val(), function(){
+
+            var mensagem = $(this).find('#texto_mensagem').val();
+            var usuario = $('#lista_usuarios').val();
+
+            socket.emit("enviar mensagem", {msg: mensagem, usu: usuario}, function(){
                 $("form#chat #texto_mensagem").val("");
             });
         });
 
-        socket.on("atualizar mensagens", function(mensagem){
-        var mensagem_formatada = $("<p />").text(mensagem);
+        socket.on("atualizar mensagens", function(dados){
+            var mensagem_formatada = $("<p />").text(dados.msg).addClass(dados.tipo);
             $("#historico_mensagens").append(mensagem_formatada);
         });
 
@@ -46,11 +52,20 @@
                     $('#sala_chat').show();
                 }else {
                     $('#acesso_usuario').val('');
-                    alert('Nome já utulizado nesta sala');
+                    alert('Nome não permitido ou em uso nesta sala');
                 }
             });
         });
         
+        socket.on('atualizar usuarios', function(usuarios) {
+            $('#lista_usuarios').empty();
+            $('#lista_usuarios').append('<option value="">Todos</option');
+                $.each(usuarios, function(indice) {
+                    var opcao_usuario = $('<option />').text(usuarios[indice]);
+                        $('#lista_usuarios').append(opcao_usuario);
+                });
+        });
+    
     </script>
 
 </body>

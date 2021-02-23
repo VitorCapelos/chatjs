@@ -30,19 +30,46 @@ function resposta (req, res) {
 
 io.on("connection", function(socket){
     socket.on('entrar', function(apelido, callback) {
-        if (!(apelido in usuarios)) {
+        if (apelido.trim() == "") {
+            callback(false)
+        } else if (!(apelido in usuarios)) {
             socket.apelido = apelido;
             usuarios[apelido] = socket;
+
+            io.sockets.emit("atualizar usuarios", Object.keys(usuarios));
+            io.sockets.emit("atualizar mensagens", {msg: "[ " + pegarDataAtual() + " ] " + apelido + " acabou de entrar na sala", tipo: 'sistema'});
+
             callback(true);
         } else {
             callback(false);
         }
+        socket.on("disconnect", function(){
+            delete usuarios[socket.apelido];
+            io.sockets.emit("atualizar usuarios", Object.keys(usuarios));
+            io.sockets.emit("atualizar mensagens", {msg: "[ " + pegarDataAtual() + " ] " + socket.apelido + " saiu da sala", tipo: 'sistema'});
+        });
     });
 
-    socket.on("enviar mensagem", function(mensagem_enviada, callback){
-        mensagem_enviada = "[ " + pegarDataAtual() + " ] " + socket.apelido + " diz: " + mensagem_enviada;
-        io.sockets.emit('atualizar mensagens', mensagem_enviada);
-        callback();
+    socket.on("enviar mensagem", function(dados, callback){
+        var mensagem_enviada = dados.msg;
+        var usuario = dados.usu;
+
+        if (mensagem_enviada.trim() == "") {
+            callback();
+        } else {
+            mensagem_enviada = "[ " + pegarDataAtual() + " ] " + socket.apelido + " diz: " + mensagem_enviada;
+            if (usuario == null) {
+                usuario = '';
+            }
+            if (usuario == '') {
+                io.sockets.emit("atualizar mensagens", {msg: mensagem_enviada, tipo: ''});
+            } else {
+                socket.emit("atualizar mensagens", {msg: mensagem_enviada, tipo:'privada'});
+                usuarios[usuario].emit("atualizar mensagens", {msg: mensagem_enviada, tipo:'privada'});
+            }
+
+            callback();
+        }
     });
 });
 
