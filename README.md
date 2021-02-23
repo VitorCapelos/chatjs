@@ -1,7 +1,7 @@
 # ChatJS
-• Clone the project on your local machine
-• Run node "app.js"
-• Now a chat is awake on your localhost
+• Clone the project on your local machine /n
+• Run node "app.js" /n 
+• Now a chat is awake on your localhost 
 
 # Features
 • Unique nickname
