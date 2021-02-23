@@ -1,6 +1,6 @@
 # ChatJS
-• Clone the project on your local machine </n>
-• Run node "app.js" </n> 
+• Clone the project on your local machine </br>
+• Run node "app.js" </br> 
 • Now a chat is awake on your localhost 
 
 # Features
