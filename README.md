@@ -4,8 +4,8 @@
 • Now a chat is awake on your localhost 
 
 # Features
-• Unique nickname
-• <b> Whispers </b> direct mesages to the users
-• Global chat mesages
+• Unique nickname </br>
+• <b> Whispers </b> direct mesages to the users </br>
+• Global chat mesages 
 
 * I config the main run file to up a local server on port 3000
