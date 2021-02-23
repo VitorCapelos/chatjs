@@ -5,7 +5,7 @@
 
 # Features
 • Unique nickname </br>
-• <b><i> Whispers <i><b> direct mesages to the users </br>
+• <b> <i> Whispers </i> </b> direct mesages to the users </br>
 • Global chat mesages 
 
 * I config the main run file to up a local server on port 3000
